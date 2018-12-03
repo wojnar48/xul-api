@@ -1,7 +1,7 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Sun Dec 02 2018 22:17:54 GMT-0500 (Eastern Standard Time)
+# timestamp: Mon Dec 03 2018 10:38:13 GMT-0500 (Eastern Standard Time)
 
-type AggregateSearchItem {
+type AggregateFilter {
   count: Int!
 }
 
@@ -16,133 +16,77 @@ type BatchPayload {
 
 scalar DateTime
 
-"""
-The `Long` scalar type represents non-fractional signed whole numeric values.
-Long can represent values between -(2^63) and 2^63 - 1.
-"""
-scalar Long
-
-type Mutation {
-  createUser(data: UserCreateInput!): User!
-  createSearchItem(data: SearchItemCreateInput!): SearchItem!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateSearchItem(data: SearchItemUpdateInput!, where: SearchItemWhereUniqueInput!): SearchItem
-  deleteUser(where: UserWhereUniqueInput!): User
-  deleteSearchItem(where: SearchItemWhereUniqueInput!): SearchItem
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertSearchItem(where: SearchItemWhereUniqueInput!, create: SearchItemCreateInput!, update: SearchItemUpdateInput!): SearchItem!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  updateManySearchItems(data: SearchItemUpdateManyMutationInput!, where: SearchItemWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManySearchItems(where: SearchItemWhereInput): BatchPayload!
-}
-
-enum MutationType {
-  CREATED
-  UPDATED
-  DELETED
-}
-
-"""An object with an ID"""
-interface Node {
-  """The id of the object."""
+type Filter implements Node {
   id: ID!
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: String
-}
-
-type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  searchItems(where: SearchItemWhereInput, orderBy: SearchItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [SearchItem]!
-  user(where: UserWhereUniqueInput!): User
-  searchItem(where: SearchItemWhereUniqueInput!): SearchItem
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  searchItemsConnection(where: SearchItemWhereInput, orderBy: SearchItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SearchItemConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
-}
-
-type SearchItem implements Node {
-  id: ID!
-  text: String!
+  name: String!
+  filterTerms: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 """A connection to a list of items."""
-type SearchItemConnection {
+type FilterConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [SearchItemEdge]!
-  aggregate: AggregateSearchItem!
+  edges: [FilterEdge]!
+  aggregate: AggregateFilter!
 }
 
-input SearchItemCreateInput {
-  text: String!
+input FilterCreatefilterTermsInput {
+  set: [String!]
+}
+
+input FilterCreateInput {
+  name: String!
+  filterTerms: FilterCreatefilterTermsInput
 }
 
 """An edge in a connection."""
-type SearchItemEdge {
+type FilterEdge {
   """The item at the end of the edge."""
-  node: SearchItem!
+  node: Filter!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum SearchItemOrderByInput {
+enum FilterOrderByInput {
   id_ASC
   id_DESC
-  text_ASC
-  text_DESC
+  name_ASC
+  name_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
 
-type SearchItemPreviousValues {
+type FilterPreviousValues {
   id: ID!
-  text: String!
+  name: String!
+  filterTerms: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type SearchItemSubscriptionPayload {
+type FilterSubscriptionPayload {
   mutation: MutationType!
-  node: SearchItem
+  node: Filter
   updatedFields: [String!]
-  previousValues: SearchItemPreviousValues
+  previousValues: FilterPreviousValues
 }
 
-input SearchItemSubscriptionWhereInput {
+input FilterSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [SearchItemSubscriptionWhereInput!]
+  AND: [FilterSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [SearchItemSubscriptionWhereInput!]
+  OR: [FilterSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [SearchItemSubscriptionWhereInput!]
+  NOT: [FilterSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -163,26 +107,32 @@ input SearchItemSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: SearchItemWhereInput
+  node: FilterWhereInput
 }
 
-input SearchItemUpdateInput {
-  text: String
+input FilterUpdatefilterTermsInput {
+  set: [String!]
 }
 
-input SearchItemUpdateManyMutationInput {
-  text: String
+input FilterUpdateInput {
+  name: String
+  filterTerms: FilterUpdatefilterTermsInput
 }
 
-input SearchItemWhereInput {
+input FilterUpdateManyMutationInput {
+  name: String
+  filterTerms: FilterUpdatefilterTermsInput
+}
+
+input FilterWhereInput {
   """Logical AND on all given filters."""
-  AND: [SearchItemWhereInput!]
+  AND: [FilterWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [SearchItemWhereInput!]
+  OR: [FilterWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [SearchItemWhereInput!]
+  NOT: [FilterWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -223,46 +173,46 @@ input SearchItemWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  text: String
+  name: String
 
   """All values that are not equal to given value."""
-  text_not: String
+  name_not: String
 
   """All values that are contained in given list."""
-  text_in: [String!]
+  name_in: [String!]
 
   """All values that are not contained in given list."""
-  text_not_in: [String!]
+  name_not_in: [String!]
 
   """All values less than the given value."""
-  text_lt: String
+  name_lt: String
 
   """All values less than or equal the given value."""
-  text_lte: String
+  name_lte: String
 
   """All values greater than the given value."""
-  text_gt: String
+  name_gt: String
 
   """All values greater than or equal the given value."""
-  text_gte: String
+  name_gte: String
 
   """All values containing the given string."""
-  text_contains: String
+  name_contains: String
 
   """All values not containing the given string."""
-  text_not_contains: String
+  name_not_contains: String
 
   """All values starting with the given string."""
-  text_starts_with: String
+  name_starts_with: String
 
   """All values not starting with the given string."""
-  text_not_starts_with: String
+  name_not_starts_with: String
 
   """All values ending with the given string."""
-  text_ends_with: String
+  name_ends_with: String
 
   """All values not ending with the given string."""
-  text_not_ends_with: String
+  name_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -309,13 +259,76 @@ input SearchItemWhereInput {
   updatedAt_gte: DateTime
 }
 
-input SearchItemWhereUniqueInput {
+input FilterWhereUniqueInput {
   id: ID
+}
+
+"""
+The `Long` scalar type represents non-fractional signed whole numeric values.
+Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
+
+type Mutation {
+  createUser(data: UserCreateInput!): User!
+  createFilter(data: FilterCreateInput!): Filter!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateFilter(data: FilterUpdateInput!, where: FilterWhereUniqueInput!): Filter
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteFilter(where: FilterWhereUniqueInput!): Filter
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertFilter(where: FilterWhereUniqueInput!, create: FilterCreateInput!, update: FilterUpdateInput!): Filter!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyFilters(data: FilterUpdateManyMutationInput!, where: FilterWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyFilters(where: FilterWhereInput): BatchPayload!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Query {
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  filters(where: FilterWhereInput, orderBy: FilterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Filter]!
+  user(where: UserWhereUniqueInput!): User
+  filter(where: FilterWhereUniqueInput!): Filter
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  filtersConnection(where: FilterWhereInput, orderBy: FilterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FilterConnection!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
 }
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  searchItem(where: SearchItemSubscriptionWhereInput): SearchItemSubscriptionPayload
+  filter(where: FilterSubscriptionWhereInput): FilterSubscriptionPayload
 }
 
 type User implements Node {

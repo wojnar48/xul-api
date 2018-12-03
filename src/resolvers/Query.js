@@ -1,9 +1,9 @@
 const Query = {
-  async searchItems(parent, args, ctx, info) {
+  async filters(parent, args, ctx, info) {
     // TODO(SW): Ensure that a given user can only query search items they have created
 
-    const searchItems = await ctx.db.query.searchItems();
-    return searchItems;
+    const filters = await ctx.db.query.filters();
+    return filters;
   }
 };
 

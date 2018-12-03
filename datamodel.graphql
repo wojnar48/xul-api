@@ -6,9 +6,10 @@ type User {
   email: String! @unique
 }
 
-type SearchItem {
+type Filter {
   id: ID! @unique
-  text: String!
+  name: String!
+  filterTerms: [String]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

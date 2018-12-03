@@ -1,10 +1,10 @@
 const Mutation = {
-  async createSearchItem(parent, args, ctx, info) {
-    // TODO(SW): Only allow authenticated users to create search items
+  async createFilter(parent, args, ctx, info) {
+    // TODO(SW): Only allow authenticated users to create filters
 
     // We can access ctx.db.mutation here because we configured the Yoga server
     // to have a `context` property in src/createServer.js.
-    const searchItem = await ctx.db.mutation.createSearchItem(
+    const filter = await ctx.db.mutation.createFilter(
       {
         data: {
           ...args,
@@ -13,7 +13,7 @@ const Mutation = {
       info
     );
 
-    return searchItem;
+    return filter;
   }
 };
 
