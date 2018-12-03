@@ -1,7 +1,9 @@
+# import * from './generated/prisma.graphql'
+
 type Mutation {
-  hi: String
+  createSearchItem(text: String): SearchItem!
 }
 
 type Query {
-  hi: String
+  searchItems: [SearchItem]!
 }
