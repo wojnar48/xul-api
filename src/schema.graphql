@@ -8,4 +8,5 @@ type Mutation {
 type Query {
   filters: [Filter]!
   filter(where: FilterWhereUniqueInput!): Filter
+  filtersConnection(where: FilterWhereInput): FilterConnection!
 }
