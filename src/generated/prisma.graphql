@@ -1,5 +1,9 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Sun Dec 02 2018 19:57:17 GMT-0500 (Eastern Standard Time)
+# timestamp: Sun Dec 02 2018 22:17:54 GMT-0500 (Eastern Standard Time)
+
+type AggregateSearchItem {
+  count: Int!
+}
 
 type AggregateUser {
   count: Int!
@@ -10,6 +14,8 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -18,11 +24,17 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createSearchItem(data: SearchItemCreateInput!): SearchItem!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateSearchItem(data: SearchItemUpdateInput!, where: SearchItemWhereUniqueInput!): SearchItem
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteSearchItem(where: SearchItemWhereUniqueInput!): SearchItem
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertSearchItem(where: SearchItemWhereUniqueInput!, create: SearchItemCreateInput!, update: SearchItemUpdateInput!): SearchItem!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManySearchItems(data: SearchItemUpdateManyMutationInput!, where: SearchItemWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManySearchItems(where: SearchItemWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -54,8 +66,11 @@ type PageInfo {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  searchItems(where: SearchItemWhereInput, orderBy: SearchItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [SearchItem]!
   user(where: UserWhereUniqueInput!): User
+  searchItem(where: SearchItemWhereUniqueInput!): SearchItem
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  searchItemsConnection(where: SearchItemWhereInput, orderBy: SearchItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SearchItemConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -64,13 +79,249 @@ type Query {
   ): Node
 }
 
+type SearchItem implements Node {
+  id: ID!
+  text: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type SearchItemConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SearchItemEdge]!
+  aggregate: AggregateSearchItem!
+}
+
+input SearchItemCreateInput {
+  text: String!
+}
+
+"""An edge in a connection."""
+type SearchItemEdge {
+  """The item at the end of the edge."""
+  node: SearchItem!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum SearchItemOrderByInput {
+  id_ASC
+  id_DESC
+  text_ASC
+  text_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type SearchItemPreviousValues {
+  id: ID!
+  text: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type SearchItemSubscriptionPayload {
+  mutation: MutationType!
+  node: SearchItem
+  updatedFields: [String!]
+  previousValues: SearchItemPreviousValues
+}
+
+input SearchItemSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SearchItemSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SearchItemSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SearchItemSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: SearchItemWhereInput
+}
+
+input SearchItemUpdateInput {
+  text: String
+}
+
+input SearchItemUpdateManyMutationInput {
+  text: String
+}
+
+input SearchItemWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SearchItemWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SearchItemWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SearchItemWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  text: String
+
+  """All values that are not equal to given value."""
+  text_not: String
+
+  """All values that are contained in given list."""
+  text_in: [String!]
+
+  """All values that are not contained in given list."""
+  text_not_in: [String!]
+
+  """All values less than the given value."""
+  text_lt: String
+
+  """All values less than or equal the given value."""
+  text_lte: String
+
+  """All values greater than the given value."""
+  text_gt: String
+
+  """All values greater than or equal the given value."""
+  text_gte: String
+
+  """All values containing the given string."""
+  text_contains: String
+
+  """All values not containing the given string."""
+  text_not_contains: String
+
+  """All values starting with the given string."""
+  text_starts_with: String
+
+  """All values not starting with the given string."""
+  text_not_starts_with: String
+
+  """All values ending with the given string."""
+  text_ends_with: String
+
+  """All values not ending with the given string."""
+  text_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+input SearchItemWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  searchItem(where: SearchItemSubscriptionWhereInput): SearchItemSubscriptionPayload
 }
 
 type User implements Node {
   id: ID!
-  name: String!
+  username: String!
+  email: String!
 }
 
 """A connection to a list of items."""
@@ -84,7 +335,8 @@ type UserConnection {
 }
 
 input UserCreateInput {
-  name: String!
+  username: String!
+  email: String!
 }
 
 """An edge in a connection."""
@@ -99,8 +351,10 @@ type UserEdge {
 enum UserOrderByInput {
   id_ASC
   id_DESC
-  name_ASC
-  name_DESC
+  username_ASC
+  username_DESC
+  email_ASC
+  email_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -109,7 +363,8 @@ enum UserOrderByInput {
 
 type UserPreviousValues {
   id: ID!
-  name: String!
+  username: String!
+  email: String!
 }
 
 type UserSubscriptionPayload {
@@ -152,11 +407,13 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateInput {
-  name: String
+  username: String
+  email: String
 }
 
 input UserUpdateManyMutationInput {
-  name: String
+  username: String
+  email: String
 }
 
 input UserWhereInput {
@@ -208,48 +465,89 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  name: String
+  username: String
 
   """All values that are not equal to given value."""
-  name_not: String
+  username_not: String
 
   """All values that are contained in given list."""
-  name_in: [String!]
+  username_in: [String!]
 
   """All values that are not contained in given list."""
-  name_not_in: [String!]
+  username_not_in: [String!]
 
   """All values less than the given value."""
-  name_lt: String
+  username_lt: String
 
   """All values less than or equal the given value."""
-  name_lte: String
+  username_lte: String
 
   """All values greater than the given value."""
-  name_gt: String
+  username_gt: String
 
   """All values greater than or equal the given value."""
-  name_gte: String
+  username_gte: String
 
   """All values containing the given string."""
-  name_contains: String
+  username_contains: String
 
   """All values not containing the given string."""
-  name_not_contains: String
+  username_not_contains: String
 
   """All values starting with the given string."""
-  name_starts_with: String
+  username_starts_with: String
 
   """All values not starting with the given string."""
-  name_not_starts_with: String
+  username_not_starts_with: String
 
   """All values ending with the given string."""
-  name_ends_with: String
+  username_ends_with: String
 
   """All values not ending with the given string."""
-  name_not_ends_with: String
+  username_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
 }
 
 input UserWhereUniqueInput {
   id: ID
+  email: String
 }

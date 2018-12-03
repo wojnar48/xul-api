@@ -1,4 +1,14 @@
+# Defines the schema for Prisma and the DB that lives under Prisma
+
 type User {
   id: ID! @unique
-  name: String!
+  username: String!
+  email: String! @unique
+}
+
+type SearchItem {
+  id: ID! @unique
+  text: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
