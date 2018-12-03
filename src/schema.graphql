@@ -2,8 +2,10 @@
 
 type Mutation {
   createFilter(name: String, filterTerms: [String]): Filter!
+  deleteFilter(id: ID!): Filter
 }
 
 type Query {
   filters: [Filter]!
+  filter(where: FilterWhereUniqueInput!): Filter
 }

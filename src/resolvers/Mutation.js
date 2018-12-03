@@ -16,6 +16,14 @@ const Mutation = {
     );
 
     return filter;
+  },
+  async deleteFilter(parent, args, ctx, info) {
+    const where = { id: args.id };
+
+    // Find the filter to be deleted
+    const filter = await ctx.db.query.filter({ where }, `{ id name }`);
+    // TODO(SW): Check if the user has permission to delete the filter 
+    return ctx.db.mutation.deleteFilter({ where }, info);
   }
 };
 
