@@ -4,10 +4,12 @@ const Mutation = {
 
     // We can access ctx.db.mutation here because we configured the Yoga server
     // to have a `context` property in src/createServer.js.
+    const filterTerms = args.filterTerms;
     const filter = await ctx.db.mutation.createFilter(
       {
         data: {
           ...args,
+          filterTerms: { set: filterTerms },
         }
       },
       info

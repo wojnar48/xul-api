@@ -9,7 +9,7 @@ type User {
 type Filter {
   id: ID! @unique
   name: String!
-  filterTerms: [String]!
+  filterTerms: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
