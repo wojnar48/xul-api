@@ -1,9 +1,22 @@
 # Defines the schema for Prisma and the DB that lives under Prisma
 
+enum Permission {
+  ADMIN
+  USER
+  ITEMCREATE
+  ITEMUPDATE
+  ITEMDELETE
+  PERMISSIONUPDATE  
+}
+
 type User {
   id: ID! @unique
   username: String!
   email: String! @unique
+  password: String!
+  resetToken: String
+  tokenExpiry: Float
+  permissions: [Permission]
 }
 
 type Filter {
