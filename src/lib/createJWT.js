@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 // on `ctx.response.cookie`
 const createJWT = (ctx, userId) => {
   // Create a JWT for the user
-  const token = jwt.sign({ iserId }, process.env.APP_SECRET);
+  const token = jwt.sign({ userId }, process.env.APP_SECRET);
 
   // Set the JWT token in a cookie
   ctx.response.cookie('token', token, {
@@ -14,3 +14,7 @@ const createJWT = (ctx, userId) => {
     maxAge: process.env.JWT_MAX_AGE, 
   });
 }
+
+module.exports = {
+  createJWT,
+};

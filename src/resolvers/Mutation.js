@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const createJWT = require('../lib/createJWT');
+const { createJWT } = require('../lib/createJWT');
 
 
 const Mutation = {
