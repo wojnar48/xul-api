@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const createJWT = require('../lib/createJWT');
+
+
 const Mutation = {
   async createFilter(parent, args, ctx, info) {
     // TODO(SW): Only allow authenticated users to create filters
@@ -46,21 +49,30 @@ const Mutation = {
       },
       info
     );
-
-    // Create a JWT for the user
-    const token = jwt.sign({ iserId: user.id }, process.env.APP_SECRET);
-
-    // Set the JWT token in a cookie
-    ctx.response.cookie('token', token, {
-      // makes cookie inaccessible to js
-      httpOnly: true,
-      // TODO(SW): Cnfirm optimal maxAge
-      maxAge: 1000 * 60 * 60 * 24, 
-    });
-
+   
+    // Create and set a JWT in a cookie
+    createJWT(ctx, user.id);
+    
     // Return the user to the browser
     return user;
-  }
+  },
+  async login(parent, args, ctx, info) {
+    // Check if there is a user with provided email
+    const user = await ctx.db.query.user({ where: { email }});
+
+    if (!user) throw new Error(`No user found for email: ${email}`);
+
+    // Check if password is valid
+    const isMatch = bcrypt.compareSync(args.password, user.password);
+
+    if (!isMatch) throw new Error('Invalid password');
+
+    // Create and set a JWT in a cookie
+    createJWT(ctx, user.id);
+
+    // Return the user
+    return user;
+  },
 };
 
 module.exports = Mutation;

@@ -4,10 +4,12 @@ type Mutation {
   createFilter(name: String, filterTerms: [String]): Filter!
   deleteFilter(id: ID!): Filter
   signup(email: String!, password: String!, username: String!): User!
+  login(email: String!, password: String!): User!
 }
 
 type Query {
   filters: [Filter]!
   filter(where: FilterWhereUniqueInput!): Filter
   filtersConnection(where: FilterWhereInput): FilterConnection!
+  me: User
 }
