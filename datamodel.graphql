@@ -3,9 +3,9 @@
 enum Permission {
   ADMIN
   USER
-  ITEMCREATE
-  ITEMUPDATE
-  ITEMDELETE
+  FILTERCREATE
+  FILTERUPDATE
+  FILTERDELETE
   PERMISSIONUPDATE  
 }
 
@@ -23,6 +23,7 @@ type Filter {
   id: ID! @unique
   name: String!
   filterTerms: [String!]!
+  user: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
