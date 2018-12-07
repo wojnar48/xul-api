@@ -6,7 +6,7 @@ const createJWT = require('../lib/createJWT');
 
 const Mutation = {
   async createFilter(parent, args, ctx, info) {
-    // TODO(SW): Only allow authenticated users to create filters
+    if (!ctx.request.userId) throw new Error('You must be logged in to create a filter!');
 
     // We can access ctx.db.mutation here because we configured the Yoga server
     // to have a `context` property in src/createServer.js.
@@ -14,6 +14,12 @@ const Mutation = {
     const filter = await ctx.db.mutation.createFilter(
       {
         data: {
+          // Connect the filter to the current user creating the filter
+          user: {
+            connect: {
+              id: ctx.request.userId,
+            }
+          },
           ...args,
           filterTerms: { set: filterTerms },
         }
