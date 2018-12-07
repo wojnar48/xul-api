@@ -63,13 +63,15 @@ const Mutation = {
     return user;
   },
   async login(parent, args, ctx, info) {
+    const { email, password } = args;
+
     // Check if there is a user with provided email
     const user = await ctx.db.query.user({ where: { email }});
 
     if (!user) throw new Error(`No user found for email: ${email}`);
 
     // Check if password is valid
-    const isMatch = bcrypt.compareSync(args.password, user.password);
+    const isMatch = bcrypt.compareSync(password, user.password);
 
     if (!isMatch) throw new Error('Invalid password');
 
@@ -79,6 +81,11 @@ const Mutation = {
     // Return the user
     return user;
   },
+  signout(parent, args, ctx, info) {
+    ctx.response.clearCookie('token');
+
+    return { message: 'Successfully signed out user' }; 
+  }
 };
 
 module.exports = Mutation;

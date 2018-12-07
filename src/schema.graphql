@@ -1,10 +1,15 @@
 # import * from './generated/prisma.graphql'
 
+type SignoutSuccessMessage {
+  message: String
+}
+
 type Mutation {
   createFilter(name: String, filterTerms: [String]): Filter!
   deleteFilter(id: ID!): Filter
   signup(email: String!, password: String!, username: String!): User!
   login(email: String!, password: String!): User!
+  signout: SignoutSuccessMessage
 }
 
 type Query {
