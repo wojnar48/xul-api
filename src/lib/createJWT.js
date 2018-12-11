@@ -6,7 +6,9 @@ const createJWT = (ctx, userId) => {
   // Create a JWT for the user
   const token = jwt.sign({ userId }, process.env.APP_SECRET);
 
-  // Set the JWT token in a cookie
+  // Set the JWT token in a cookie.
+  // Note: By using cookies (instead of localStorage) we will
+  // be able to SSR components that require auth.
   ctx.response.cookie('token', token, {
     // makes cookie inaccessible to js
     httpOnly: true,
