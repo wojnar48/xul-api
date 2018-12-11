@@ -35,10 +35,11 @@ type User {
 type Filter {
   id: ID! @unique
   name: String!
+  hits: Int
   filterTerms: [String!]!
   user: User!
-  frequency: Frequency
-  filterType: FilterType
+  frequency: Frequency!
+  filterType: FilterType!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -55,6 +56,8 @@ type FilterJob {
   id: ID! @unique
   filter: Filter!
   user: User!
+  frequency: Frequency!
+  filterType: FilterType!
   lastRun: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!

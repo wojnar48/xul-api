@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Tue Dec 11 2018 18:07:15 GMT-0500 (Eastern Standard Time)
+# timestamp: Tue Dec 11 2018 18:27:14 GMT-0500 (Eastern Standard Time)
 
 type AggregateFilter {
   count: Int!
@@ -27,10 +27,11 @@ scalar DateTime
 type Filter implements Node {
   id: ID!
   name: String!
+  hits: Int
   filterTerms: [String!]!
   user: User!
-  frequency: Frequency
-  filterType: FilterType
+  frequency: Frequency!
+  filterType: FilterType!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -51,8 +52,9 @@ input FilterCreatefilterTermsInput {
 
 input FilterCreateInput {
   name: String!
-  frequency: Frequency
-  filterType: FilterType
+  hits: Int
+  frequency: Frequency!
+  filterType: FilterType!
   filterTerms: FilterCreatefilterTermsInput
   user: UserCreateOneInput!
 }
@@ -75,6 +77,8 @@ type FilterJob implements Node {
   id: ID!
   filter: Filter!
   user: User!
+  frequency: Frequency!
+  filterType: FilterType!
   lastRun: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -91,6 +95,8 @@ type FilterJobConnection {
 }
 
 input FilterJobCreateInput {
+  frequency: Frequency!
+  filterType: FilterType!
   lastRun: DateTime
   filter: FilterCreateOneInput!
   user: UserCreateOneInput!
@@ -108,6 +114,10 @@ type FilterJobEdge {
 enum FilterJobOrderByInput {
   id_ASC
   id_DESC
+  frequency_ASC
+  frequency_DESC
+  filterType_ASC
+  filterType_DESC
   lastRun_ASC
   lastRun_DESC
   createdAt_ASC
@@ -118,6 +128,8 @@ enum FilterJobOrderByInput {
 
 type FilterJobPreviousValues {
   id: ID!
+  frequency: Frequency!
+  filterType: FilterType!
   lastRun: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -163,12 +175,16 @@ input FilterJobSubscriptionWhereInput {
 }
 
 input FilterJobUpdateInput {
+  frequency: Frequency
+  filterType: FilterType
   lastRun: DateTime
   filter: FilterUpdateOneRequiredInput
   user: UserUpdateOneRequiredInput
 }
 
 input FilterJobUpdateManyMutationInput {
+  frequency: Frequency
+  filterType: FilterType
   lastRun: DateTime
 }
 
@@ -221,6 +237,26 @@ input FilterJobWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  frequency: Frequency
+
+  """All values that are not equal to given value."""
+  frequency_not: Frequency
+
+  """All values that are contained in given list."""
+  frequency_in: [Frequency!]
+
+  """All values that are not contained in given list."""
+  frequency_not_in: [Frequency!]
+  filterType: FilterType
+
+  """All values that are not equal to given value."""
+  filterType_not: FilterType
+
+  """All values that are contained in given list."""
+  filterType_in: [FilterType!]
+
+  """All values that are not contained in given list."""
+  filterType_not_in: [FilterType!]
   lastRun: DateTime
 
   """All values that are not equal to given value."""
@@ -300,6 +336,8 @@ enum FilterOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  hits_ASC
+  hits_DESC
   frequency_ASC
   frequency_DESC
   filterType_ASC
@@ -313,9 +351,10 @@ enum FilterOrderByInput {
 type FilterPreviousValues {
   id: ID!
   name: String!
+  hits: Int
   filterTerms: [String!]!
-  frequency: Frequency
-  filterType: FilterType
+  frequency: Frequency!
+  filterType: FilterType!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -605,6 +644,7 @@ enum FilterType {
 
 input FilterUpdateDataInput {
   name: String
+  hits: Int
   frequency: Frequency
   filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
@@ -617,6 +657,7 @@ input FilterUpdatefilterTermsInput {
 
 input FilterUpdateInput {
   name: String
+  hits: Int
   frequency: Frequency
   filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
@@ -625,6 +666,7 @@ input FilterUpdateInput {
 
 input FilterUpdateManyMutationInput {
   name: String
+  hits: Int
   frequency: Frequency
   filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
@@ -731,6 +773,28 @@ input FilterWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  hits: Int
+
+  """All values that are not equal to given value."""
+  hits_not: Int
+
+  """All values that are contained in given list."""
+  hits_in: [Int!]
+
+  """All values that are not contained in given list."""
+  hits_not_in: [Int!]
+
+  """All values less than the given value."""
+  hits_lt: Int
+
+  """All values less than or equal the given value."""
+  hits_lte: Int
+
+  """All values greater than the given value."""
+  hits_gt: Int
+
+  """All values greater than or equal the given value."""
+  hits_gte: Int
   frequency: Frequency
 
   """All values that are not equal to given value."""
