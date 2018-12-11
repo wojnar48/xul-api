@@ -36,3 +36,12 @@ type FilterResult {
   updatedAt: DateTime!
 }
 
+type FilterJob {
+  id: ID! @unique
+  filter: Filter!
+  user: User!
+  lastRun: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+

@@ -1,7 +1,11 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Tue Dec 11 2018 16:05:54 GMT-0500 (Eastern Standard Time)
+# timestamp: Tue Dec 11 2018 17:47:49 GMT-0500 (Eastern Standard Time)
 
 type AggregateFilter {
+  count: Int!
+}
+
+type AggregateFilterJob {
   count: Int!
 }
 
@@ -61,6 +65,230 @@ type FilterEdge {
 
   """A cursor for use in pagination."""
   cursor: String!
+}
+
+type FilterJob implements Node {
+  id: ID!
+  filter: Filter!
+  user: User!
+  lastRun: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type FilterJobConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [FilterJobEdge]!
+  aggregate: AggregateFilterJob!
+}
+
+input FilterJobCreateInput {
+  lastRun: DateTime
+  filter: FilterCreateOneInput!
+  user: UserCreateOneInput!
+}
+
+"""An edge in a connection."""
+type FilterJobEdge {
+  """The item at the end of the edge."""
+  node: FilterJob!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum FilterJobOrderByInput {
+  id_ASC
+  id_DESC
+  lastRun_ASC
+  lastRun_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type FilterJobPreviousValues {
+  id: ID!
+  lastRun: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type FilterJobSubscriptionPayload {
+  mutation: MutationType!
+  node: FilterJob
+  updatedFields: [String!]
+  previousValues: FilterJobPreviousValues
+}
+
+input FilterJobSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FilterJobSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FilterJobSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FilterJobSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: FilterJobWhereInput
+}
+
+input FilterJobUpdateInput {
+  lastRun: DateTime
+  filter: FilterUpdateOneRequiredInput
+  user: UserUpdateOneRequiredInput
+}
+
+input FilterJobUpdateManyMutationInput {
+  lastRun: DateTime
+}
+
+input FilterJobWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FilterJobWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FilterJobWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FilterJobWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  lastRun: DateTime
+
+  """All values that are not equal to given value."""
+  lastRun_not: DateTime
+
+  """All values that are contained in given list."""
+  lastRun_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  lastRun_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  lastRun_lt: DateTime
+
+  """All values less than or equal the given value."""
+  lastRun_lte: DateTime
+
+  """All values greater than the given value."""
+  lastRun_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  lastRun_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  filter: FilterWhereInput
+  user: UserWhereInput
+}
+
+input FilterJobWhereUniqueInput {
+  id: ID
 }
 
 enum FilterOrderByInput {
@@ -540,21 +768,27 @@ scalar Long
 
 type Mutation {
   createFilterResult(data: FilterResultCreateInput!): FilterResult!
+  createFilterJob(data: FilterJobCreateInput!): FilterJob!
   createUser(data: UserCreateInput!): User!
   createFilter(data: FilterCreateInput!): Filter!
   updateFilterResult(data: FilterResultUpdateInput!, where: FilterResultWhereUniqueInput!): FilterResult
+  updateFilterJob(data: FilterJobUpdateInput!, where: FilterJobWhereUniqueInput!): FilterJob
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateFilter(data: FilterUpdateInput!, where: FilterWhereUniqueInput!): Filter
   deleteFilterResult(where: FilterResultWhereUniqueInput!): FilterResult
+  deleteFilterJob(where: FilterJobWhereUniqueInput!): FilterJob
   deleteUser(where: UserWhereUniqueInput!): User
   deleteFilter(where: FilterWhereUniqueInput!): Filter
   upsertFilterResult(where: FilterResultWhereUniqueInput!, create: FilterResultCreateInput!, update: FilterResultUpdateInput!): FilterResult!
+  upsertFilterJob(where: FilterJobWhereUniqueInput!, create: FilterJobCreateInput!, update: FilterJobUpdateInput!): FilterJob!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertFilter(where: FilterWhereUniqueInput!, create: FilterCreateInput!, update: FilterUpdateInput!): Filter!
   updateManyFilterResults(data: FilterResultUpdateManyMutationInput!, where: FilterResultWhereInput): BatchPayload!
+  updateManyFilterJobs(data: FilterJobUpdateManyMutationInput!, where: FilterJobWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyFilters(data: FilterUpdateManyMutationInput!, where: FilterWhereInput): BatchPayload!
   deleteManyFilterResults(where: FilterResultWhereInput): BatchPayload!
+  deleteManyFilterJobs(where: FilterJobWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyFilters(where: FilterWhereInput): BatchPayload!
 }
@@ -597,12 +831,15 @@ enum Permission {
 
 type Query {
   filterResults(where: FilterResultWhereInput, orderBy: FilterResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FilterResult]!
+  filterJobs(where: FilterJobWhereInput, orderBy: FilterJobOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FilterJob]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   filters(where: FilterWhereInput, orderBy: FilterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Filter]!
   filterResult(where: FilterResultWhereUniqueInput!): FilterResult
+  filterJob(where: FilterJobWhereUniqueInput!): FilterJob
   user(where: UserWhereUniqueInput!): User
   filter(where: FilterWhereUniqueInput!): Filter
   filterResultsConnection(where: FilterResultWhereInput, orderBy: FilterResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FilterResultConnection!
+  filterJobsConnection(where: FilterJobWhereInput, orderBy: FilterJobOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FilterJobConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   filtersConnection(where: FilterWhereInput, orderBy: FilterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FilterConnection!
 
@@ -615,6 +852,7 @@ type Query {
 
 type Subscription {
   filterResult(where: FilterResultSubscriptionWhereInput): FilterResultSubscriptionPayload
+  filterJob(where: FilterJobSubscriptionWhereInput): FilterJobSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   filter(where: FilterSubscriptionWhereInput): FilterSubscriptionPayload
 }
