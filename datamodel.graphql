@@ -27,3 +27,12 @@ type Filter {
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
+type FilterResult {
+  id: ID! @unique
+  url: String!
+  filter: Filter!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
