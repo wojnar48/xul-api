@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Tue Dec 11 2018 17:47:49 GMT-0500 (Eastern Standard Time)
+# timestamp: Tue Dec 11 2018 18:07:15 GMT-0500 (Eastern Standard Time)
 
 type AggregateFilter {
   count: Int!
@@ -29,6 +29,8 @@ type Filter implements Node {
   name: String!
   filterTerms: [String!]!
   user: User!
+  frequency: Frequency
+  filterType: FilterType
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -49,6 +51,8 @@ input FilterCreatefilterTermsInput {
 
 input FilterCreateInput {
   name: String!
+  frequency: Frequency
+  filterType: FilterType
   filterTerms: FilterCreatefilterTermsInput
   user: UserCreateOneInput!
 }
@@ -296,6 +300,10 @@ enum FilterOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  frequency_ASC
+  frequency_DESC
+  filterType_ASC
+  filterType_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -306,6 +314,8 @@ type FilterPreviousValues {
   id: ID!
   name: String!
   filterTerms: [String!]!
+  frequency: Frequency
+  filterType: FilterType
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -587,8 +597,16 @@ input FilterSubscriptionWhereInput {
   node: FilterWhereInput
 }
 
+enum FilterType {
+  ALL
+  HIGHESTPOINTS
+  HIGHESTCOMMENTS
+}
+
 input FilterUpdateDataInput {
   name: String
+  frequency: Frequency
+  filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
   user: UserUpdateOneRequiredInput
 }
@@ -599,12 +617,16 @@ input FilterUpdatefilterTermsInput {
 
 input FilterUpdateInput {
   name: String
+  frequency: Frequency
+  filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
   user: UserUpdateOneRequiredInput
 }
 
 input FilterUpdateManyMutationInput {
   name: String
+  frequency: Frequency
+  filterType: FilterType
   filterTerms: FilterUpdatefilterTermsInput
 }
 
@@ -709,6 +731,26 @@ input FilterWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  frequency: Frequency
+
+  """All values that are not equal to given value."""
+  frequency_not: Frequency
+
+  """All values that are contained in given list."""
+  frequency_in: [Frequency!]
+
+  """All values that are not contained in given list."""
+  frequency_not_in: [Frequency!]
+  filterType: FilterType
+
+  """All values that are not equal to given value."""
+  filterType_not: FilterType
+
+  """All values that are contained in given list."""
+  filterType_in: [FilterType!]
+
+  """All values that are not contained in given list."""
+  filterType_not_in: [FilterType!]
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -758,6 +800,13 @@ input FilterWhereInput {
 
 input FilterWhereUniqueInput {
   id: ID
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
 }
 
 """

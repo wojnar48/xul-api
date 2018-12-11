@@ -9,6 +9,19 @@ enum Permission {
   PERMISSIONUPDATE  
 }
 
+enum Frequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+}
+
+enum FilterType {
+  ALL
+  HIGHESTPOINTS
+  HIGHESTCOMMENTS
+}
+
 type User {
   id: ID! @unique
   username: String!
@@ -24,6 +37,8 @@ type Filter {
   name: String!
   filterTerms: [String!]!
   user: User!
+  frequency: Frequency
+  filterType: FilterType
   createdAt: DateTime!
   updatedAt: DateTime!
 }
