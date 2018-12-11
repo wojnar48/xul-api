@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cron = require('node-cron');
 
 const { createJWT } = require('../lib/createJWT');
 
@@ -22,9 +23,32 @@ const Mutation = {
           },
           ...args,
           filterTerms: { set: filterTerms },
+          frequency: 'DAILY',
+          filterType: 'ALL',
         }
       },
       info
+    );
+    
+    // Create a job based on the filter
+    const filterJob = ctx.db.mutation.createFilterJob(
+      {
+        data: {
+          filter: {
+            connect: {
+              id: filter.id,
+            }
+          },
+          user: {
+            connect: {
+              id: ctx.request.userId,
+            }
+          },
+          lastRun: new Date(),
+          frequency: 'DAILY',
+          filterType: 'ALL',
+        }
+      }
     );
 
     return filter;
