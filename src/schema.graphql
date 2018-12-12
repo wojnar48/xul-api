@@ -5,7 +5,7 @@ type SignoutSuccessMessage {
 }
 
 type Mutation {
-  createFilter(name: String, filterTerms: [String]): Filter!
+  createFilter(name: String, filterTerms: [String], resultFilter: String!): Filter!
   deleteFilter(id: ID!): Filter
   signup(email: String!, password: String!, username: String!): User!
   login(email: String!, password: String!): User!
