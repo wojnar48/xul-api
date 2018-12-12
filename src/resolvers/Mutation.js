@@ -44,7 +44,7 @@ const Mutation = {
               id: ctx.request.userId,
             }
           },
-          lastRun: new Date(),
+          lastRun: Date.now(),
           frequency: 'DAILY',
           filterType: 'ALL',
         }
