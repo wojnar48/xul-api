@@ -1,6 +1,4 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const cron = require('node-cron');
 
 const { createJWT } = require('../lib/createJWT');
 
@@ -24,7 +22,7 @@ const Mutation = {
           ...args,
           filterTerms: { set: filterTerms },
           frequency: 'DAILY',
-          filterType: 'ALL',
+          resultFilter: args.resultFilter,
         }
       },
       info
@@ -46,7 +44,7 @@ const Mutation = {
           },
           lastRun: Date.now(),
           frequency: 'DAILY',
-          filterType: 'ALL',
+          resultFilter: args.resultFilter,
         }
       }
     );

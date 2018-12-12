@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/szymon-wojnar/lax-api/dev
-# timestamp: Tue Dec 11 2018 18:27:14 GMT-0500 (Eastern Standard Time)
+# timestamp: Tue Dec 11 2018 21:57:55 GMT-0500 (Eastern Standard Time)
 
 type AggregateFilter {
   count: Int!
@@ -30,8 +30,9 @@ type Filter implements Node {
   hits: Int
   filterTerms: [String!]!
   user: User!
+  maxHits: Int
   frequency: Frequency!
-  filterType: FilterType!
+  resultFilter: ResultFilter!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -53,8 +54,9 @@ input FilterCreatefilterTermsInput {
 input FilterCreateInput {
   name: String!
   hits: Int
+  maxHits: Int
   frequency: Frequency!
-  filterType: FilterType!
+  resultFilter: ResultFilter!
   filterTerms: FilterCreatefilterTermsInput
   user: UserCreateOneInput!
 }
@@ -78,8 +80,8 @@ type FilterJob implements Node {
   filter: Filter!
   user: User!
   frequency: Frequency!
-  filterType: FilterType!
-  lastRun: DateTime
+  resultFilter: ResultFilter!
+  lastRun: Float
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -96,8 +98,8 @@ type FilterJobConnection {
 
 input FilterJobCreateInput {
   frequency: Frequency!
-  filterType: FilterType!
-  lastRun: DateTime
+  resultFilter: ResultFilter!
+  lastRun: Float
   filter: FilterCreateOneInput!
   user: UserCreateOneInput!
 }
@@ -116,8 +118,8 @@ enum FilterJobOrderByInput {
   id_DESC
   frequency_ASC
   frequency_DESC
-  filterType_ASC
-  filterType_DESC
+  resultFilter_ASC
+  resultFilter_DESC
   lastRun_ASC
   lastRun_DESC
   createdAt_ASC
@@ -129,8 +131,8 @@ enum FilterJobOrderByInput {
 type FilterJobPreviousValues {
   id: ID!
   frequency: Frequency!
-  filterType: FilterType!
-  lastRun: DateTime
+  resultFilter: ResultFilter!
+  lastRun: Float
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -176,16 +178,16 @@ input FilterJobSubscriptionWhereInput {
 
 input FilterJobUpdateInput {
   frequency: Frequency
-  filterType: FilterType
-  lastRun: DateTime
+  resultFilter: ResultFilter
+  lastRun: Float
   filter: FilterUpdateOneRequiredInput
   user: UserUpdateOneRequiredInput
 }
 
 input FilterJobUpdateManyMutationInput {
   frequency: Frequency
-  filterType: FilterType
-  lastRun: DateTime
+  resultFilter: ResultFilter
+  lastRun: Float
 }
 
 input FilterJobWhereInput {
@@ -247,38 +249,38 @@ input FilterJobWhereInput {
 
   """All values that are not contained in given list."""
   frequency_not_in: [Frequency!]
-  filterType: FilterType
+  resultFilter: ResultFilter
 
   """All values that are not equal to given value."""
-  filterType_not: FilterType
+  resultFilter_not: ResultFilter
 
   """All values that are contained in given list."""
-  filterType_in: [FilterType!]
+  resultFilter_in: [ResultFilter!]
 
   """All values that are not contained in given list."""
-  filterType_not_in: [FilterType!]
-  lastRun: DateTime
+  resultFilter_not_in: [ResultFilter!]
+  lastRun: Float
 
   """All values that are not equal to given value."""
-  lastRun_not: DateTime
+  lastRun_not: Float
 
   """All values that are contained in given list."""
-  lastRun_in: [DateTime!]
+  lastRun_in: [Float!]
 
   """All values that are not contained in given list."""
-  lastRun_not_in: [DateTime!]
+  lastRun_not_in: [Float!]
 
   """All values less than the given value."""
-  lastRun_lt: DateTime
+  lastRun_lt: Float
 
   """All values less than or equal the given value."""
-  lastRun_lte: DateTime
+  lastRun_lte: Float
 
   """All values greater than the given value."""
-  lastRun_gt: DateTime
+  lastRun_gt: Float
 
   """All values greater than or equal the given value."""
-  lastRun_gte: DateTime
+  lastRun_gte: Float
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -338,10 +340,12 @@ enum FilterOrderByInput {
   name_DESC
   hits_ASC
   hits_DESC
+  maxHits_ASC
+  maxHits_DESC
   frequency_ASC
   frequency_DESC
-  filterType_ASC
-  filterType_DESC
+  resultFilter_ASC
+  resultFilter_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -353,16 +357,21 @@ type FilterPreviousValues {
   name: String!
   hits: Int
   filterTerms: [String!]!
+  maxHits: Int
   frequency: Frequency!
-  filterType: FilterType!
+  resultFilter: ResultFilter!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type FilterResult implements Node {
   id: ID!
-  url: String!
+  url: String
   filter: Filter!
+  published: String
+  author: String
+  points: Int
+  comments: Int
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -378,7 +387,11 @@ type FilterResultConnection {
 }
 
 input FilterResultCreateInput {
-  url: String!
+  url: String
+  published: String
+  author: String
+  points: Int
+  comments: Int
   filter: FilterCreateOneInput!
 }
 
@@ -396,6 +409,14 @@ enum FilterResultOrderByInput {
   id_DESC
   url_ASC
   url_DESC
+  published_ASC
+  published_DESC
+  author_ASC
+  author_DESC
+  points_ASC
+  points_DESC
+  comments_ASC
+  comments_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -404,7 +425,11 @@ enum FilterResultOrderByInput {
 
 type FilterResultPreviousValues {
   id: ID!
-  url: String!
+  url: String
+  published: String
+  author: String
+  points: Int
+  comments: Int
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -450,11 +475,19 @@ input FilterResultSubscriptionWhereInput {
 
 input FilterResultUpdateInput {
   url: String
+  published: String
+  author: String
+  points: Int
+  comments: Int
   filter: FilterUpdateOneRequiredInput
 }
 
 input FilterResultUpdateManyMutationInput {
   url: String
+  published: String
+  author: String
+  points: Int
+  comments: Int
 }
 
 input FilterResultWhereInput {
@@ -546,6 +579,130 @@ input FilterResultWhereInput {
 
   """All values not ending with the given string."""
   url_not_ends_with: String
+  published: String
+
+  """All values that are not equal to given value."""
+  published_not: String
+
+  """All values that are contained in given list."""
+  published_in: [String!]
+
+  """All values that are not contained in given list."""
+  published_not_in: [String!]
+
+  """All values less than the given value."""
+  published_lt: String
+
+  """All values less than or equal the given value."""
+  published_lte: String
+
+  """All values greater than the given value."""
+  published_gt: String
+
+  """All values greater than or equal the given value."""
+  published_gte: String
+
+  """All values containing the given string."""
+  published_contains: String
+
+  """All values not containing the given string."""
+  published_not_contains: String
+
+  """All values starting with the given string."""
+  published_starts_with: String
+
+  """All values not starting with the given string."""
+  published_not_starts_with: String
+
+  """All values ending with the given string."""
+  published_ends_with: String
+
+  """All values not ending with the given string."""
+  published_not_ends_with: String
+  author: String
+
+  """All values that are not equal to given value."""
+  author_not: String
+
+  """All values that are contained in given list."""
+  author_in: [String!]
+
+  """All values that are not contained in given list."""
+  author_not_in: [String!]
+
+  """All values less than the given value."""
+  author_lt: String
+
+  """All values less than or equal the given value."""
+  author_lte: String
+
+  """All values greater than the given value."""
+  author_gt: String
+
+  """All values greater than or equal the given value."""
+  author_gte: String
+
+  """All values containing the given string."""
+  author_contains: String
+
+  """All values not containing the given string."""
+  author_not_contains: String
+
+  """All values starting with the given string."""
+  author_starts_with: String
+
+  """All values not starting with the given string."""
+  author_not_starts_with: String
+
+  """All values ending with the given string."""
+  author_ends_with: String
+
+  """All values not ending with the given string."""
+  author_not_ends_with: String
+  points: Int
+
+  """All values that are not equal to given value."""
+  points_not: Int
+
+  """All values that are contained in given list."""
+  points_in: [Int!]
+
+  """All values that are not contained in given list."""
+  points_not_in: [Int!]
+
+  """All values less than the given value."""
+  points_lt: Int
+
+  """All values less than or equal the given value."""
+  points_lte: Int
+
+  """All values greater than the given value."""
+  points_gt: Int
+
+  """All values greater than or equal the given value."""
+  points_gte: Int
+  comments: Int
+
+  """All values that are not equal to given value."""
+  comments_not: Int
+
+  """All values that are contained in given list."""
+  comments_in: [Int!]
+
+  """All values that are not contained in given list."""
+  comments_not_in: [Int!]
+
+  """All values less than the given value."""
+  comments_lt: Int
+
+  """All values less than or equal the given value."""
+  comments_lte: Int
+
+  """All values greater than the given value."""
+  comments_gt: Int
+
+  """All values greater than or equal the given value."""
+  comments_gte: Int
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -636,17 +793,12 @@ input FilterSubscriptionWhereInput {
   node: FilterWhereInput
 }
 
-enum FilterType {
-  ALL
-  HIGHESTPOINTS
-  HIGHESTCOMMENTS
-}
-
 input FilterUpdateDataInput {
   name: String
   hits: Int
+  maxHits: Int
   frequency: Frequency
-  filterType: FilterType
+  resultFilter: ResultFilter
   filterTerms: FilterUpdatefilterTermsInput
   user: UserUpdateOneRequiredInput
 }
@@ -658,8 +810,9 @@ input FilterUpdatefilterTermsInput {
 input FilterUpdateInput {
   name: String
   hits: Int
+  maxHits: Int
   frequency: Frequency
-  filterType: FilterType
+  resultFilter: ResultFilter
   filterTerms: FilterUpdatefilterTermsInput
   user: UserUpdateOneRequiredInput
 }
@@ -667,8 +820,9 @@ input FilterUpdateInput {
 input FilterUpdateManyMutationInput {
   name: String
   hits: Int
+  maxHits: Int
   frequency: Frequency
-  filterType: FilterType
+  resultFilter: ResultFilter
   filterTerms: FilterUpdatefilterTermsInput
 }
 
@@ -795,6 +949,28 @@ input FilterWhereInput {
 
   """All values greater than or equal the given value."""
   hits_gte: Int
+  maxHits: Int
+
+  """All values that are not equal to given value."""
+  maxHits_not: Int
+
+  """All values that are contained in given list."""
+  maxHits_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxHits_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxHits_lt: Int
+
+  """All values less than or equal the given value."""
+  maxHits_lte: Int
+
+  """All values greater than the given value."""
+  maxHits_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxHits_gte: Int
   frequency: Frequency
 
   """All values that are not equal to given value."""
@@ -805,16 +981,16 @@ input FilterWhereInput {
 
   """All values that are not contained in given list."""
   frequency_not_in: [Frequency!]
-  filterType: FilterType
+  resultFilter: ResultFilter
 
   """All values that are not equal to given value."""
-  filterType_not: FilterType
+  resultFilter_not: ResultFilter
 
   """All values that are contained in given list."""
-  filterType_in: [FilterType!]
+  resultFilter_in: [ResultFilter!]
 
   """All values that are not contained in given list."""
-  filterType_not_in: [FilterType!]
+  resultFilter_not_in: [ResultFilter!]
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -961,6 +1137,12 @@ type Query {
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+enum ResultFilter {
+  NOFILTER
+  HIPOINTS
+  HICOMMENTS
 }
 
 type Subscription {

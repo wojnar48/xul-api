@@ -16,10 +16,10 @@ enum Frequency {
   MONTHLY
 }
 
-enum FilterType {
-  ALL
-  HIGHESTPOINTS
-  HIGHESTCOMMENTS
+enum ResultFilter {
+  NOFILTER
+  HIPOINTS
+  HICOMMENTS
 }
 
 type User {
@@ -38,16 +38,21 @@ type Filter {
   hits: Int
   filterTerms: [String!]!
   user: User!
+  maxHits: Int
   frequency: Frequency!
-  filterType: FilterType!
+  resultFilter: ResultFilter!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type FilterResult {
   id: ID! @unique
-  url: String!
+  url: String
   filter: Filter!
+  published: String
+  author: String
+  points: Int
+  comments: Int
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -57,8 +62,8 @@ type FilterJob {
   filter: Filter!
   user: User!
   frequency: Frequency!
-  filterType: FilterType!
-  lastRun: DateTime
+  resultFilter: ResultFilter!
+  lastRun: Float
   createdAt: DateTime!
   updatedAt: DateTime!
 }
